@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class HomeController extends Controller
 {
@@ -12,25 +11,28 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $calculate = $this->calculate([1,5,3,2,5,2,1,1]);
+        // Menghitung nilai dari daftar angka
+        $calculate = $this->calculate([1, 5, 3, 2, 5, 2, 1, 1]);
 
+        // Mengirimkan hasil ke tampilan "home"
         return view('home', $calculate);
     }
 
-    public function calculate($listOfInteger) {
+    /**
+     * Menghitung nilai minimum, maksimum, dan angka ganjil dari daftar angka.
+     * 
+     * @param array $listOfInteger Daftar angka yang akan dihitung
+     * @return array Hasil perhitungan
+     */
+    private function calculate(array $listOfInteger): array
+    {
         $min = min($listOfInteger);
         $max = max($listOfInteger);
-        $odd = Arr::where($listOfInteger, function ($value, $key) {
-            return $value % 2 !== 0;
-        });
-        $odd = array_values($odd);
+        
+        // Menyaring angka ganjil dan mengatur ulang indeks array
+        $odd = array_values(array_filter($listOfInteger, fn($value) => $value % 2 !== 0));
 
-        return compact(
-            'listOfInteger',
-            'min',
-            'max',
-            'odd'
-        );
+        return compact('listOfInteger', 'min', 'max', 'odd');
     }
 
     /**
